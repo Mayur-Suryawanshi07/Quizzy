@@ -1,8 +1,14 @@
-package com.example.quizz.ui.signup
+package com.mayur.quizzy.presentation.screens.auth.signup
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -10,133 +16,261 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.mayur.quizzy.AppPreview
+import com.mayur.quizzy.presentation.navigation.Graph
+import com.mayur.quizzy.presentation.navigation.Routes
 import com.mayur.quizzy.ui.theme.QuizzyTheme
 
 @Composable
 fun SignUpScreen(
+    navController: NavHostController,
     modifier: Modifier = Modifier,
-    navController: NavHostController
+    viewModel: SignUpViewModel = viewModel()
 ) {
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirm by remember { mutableStateOf("") }
-    var showPass by remember { mutableStateOf(false) }
-    var showConfirm by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsStateWithLifecycle()
+    val snackbarHostState = remember { SnackbarHostState() }
 
-    val passwordsMatch = password.isNotEmpty() && password == confirm
-
-    Surface(modifier.fillMaxSize()) {
-        Column(
-            Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
-        ) {
-            Text("Sign up", style = MaterialTheme.typography.headlineMedium)
-            Text("Create your account", style = MaterialTheme.typography.bodyMedium)
-
-            OutlinedTextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username") },
-                leadingIcon = { Icon(Icons.Filled.Person, null) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                leadingIcon = { Icon(Icons.Filled.Email, null) },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                leadingIcon = { Icon(Icons.Outlined.Lock, null) },
-                trailingIcon = {
-                    IconButton(onClick = { showPass = !showPass }) {
-                        Icon(if (showPass) Icons.Filled.VisibilityOff else Icons.Filled.Visibility, null)
-                    }
-                },
-                visualTransformation = if (showPass) VisualTransformation.None else PasswordVisualTransformation(),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            OutlinedTextField(
-                value = confirm,
-                onValueChange = { confirm = it },
-                isError = confirm.isNotEmpty() && !passwordsMatch,
-                label = { Text("Confirm Password") },
-                supportingText = {
-                    if (confirm.isNotEmpty() && !passwordsMatch) Text("Passwords don’t match")
-                },
-                leadingIcon = { Icon(Icons.Outlined.Lock, null) },
-                trailingIcon = {
-                    IconButton(onClick = { showConfirm = !showConfirm }) {
-                        Icon(if (showConfirm) Icons.Filled.VisibilityOff else Icons.Filled.Visibility, null)
-                    }
-                },
-                visualTransformation = if (showConfirm) VisualTransformation.None else PasswordVisualTransformation(),
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Button(
-                onClick = { if (passwordsMatch) onSignUp(username.trim(), email.trim(), password) },
-                enabled = passwordsMatch && email.isNotBlank() && username.isNotBlank(),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp)
-            ) { Text("Sign up") }
-
-            Text("Or")
-
-            OutlinedButton(
-                onClick = onGoogleClick,
-                shape = RoundedCornerShape(28.dp),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-            ) {
-                Text("Login with Google")
+    LaunchedEffect(state.isSignUpSuccessful) {
+        if (state.isSignUpSuccessful) {
+            navController.navigate(Graph.Main) {
+                popUpTo(Graph.Auth) { inclusive = true }
             }
+            viewModel.consumeSignUpSuccess()
+        }
+    }
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Already have an account? ")
+    LaunchedEffect(state.errorMessage, state.infoMessage) {
+        val errorMessage = state.errorMessage
+        val infoMessage = state.infoMessage
+        if (errorMessage != null) {
+            snackbarHostState.showSnackbar(errorMessage)
+        }
+        if (infoMessage != null) {
+            snackbarHostState.showSnackbar(infoMessage)
+        }
+        if (errorMessage != null || infoMessage != null) {
+            viewModel.clearMessages()
+        }
+    }
+
+    SignUpScreenContent(
+        modifier = modifier,
+        state = state,
+        snackbarHostState = snackbarHostState,
+        onNameChange = viewModel::onDisplayNameChanged,
+        onEmailChange = viewModel::onEmailChanged,
+        onPasswordChange = viewModel::onPasswordChanged,
+        onConfirmPasswordChange = viewModel::onConfirmPasswordChanged,
+        onTogglePassword = viewModel::togglePasswordVisibility,
+        onToggleConfirmPassword = viewModel::toggleConfirmPasswordVisibility,
+        onSignUpClick = viewModel::signUp,
+        onLoginClick = { navController.navigate(Routes.Login) { popUpTo(Routes.Login) { inclusive = true } } }
+    )
+}
+
+@Composable
+private fun SignUpScreenContent(
+    modifier: Modifier,
+    state: SignUpState,
+    snackbarHostState: SnackbarHostState,
+    onNameChange: (String) -> Unit,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onTogglePassword: () -> Unit,
+    onToggleConfirmPassword: () -> Unit,
+    onSignUpClick: () -> Unit,
+    onLoginClick: () -> Unit
+) {
+    val passwordsMatch = state.password.isNotEmpty() &&
+        state.confirmPassword.isNotEmpty() &&
+        state.password == state.confirmPassword
+
+    Scaffold(
+        modifier = modifier,
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        Surface(
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Column(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
+            ) {
                 Text(
-                    "Login",
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.clickable { onLoginClick() }
+                    text = "Sign up",
+                    style = MaterialTheme.typography.headlineMedium
                 )
+                Text(
+                    text = "Create your account",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                OutlinedTextField(
+                    value = state.displayName,
+                    onValueChange = onNameChange,
+                    label = { Text("Full name") },
+                    leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                    singleLine = true,
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = state.email,
+                    onValueChange = onEmailChange,
+                    label = { Text("Email") },
+                    leadingIcon = { Icon(Icons.Filled.Email, contentDescription = null) },
+                    singleLine = true,
+                    enabled = !state.isLoading,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = state.password,
+                    onValueChange = onPasswordChange,
+                    label = { Text("Password") },
+                    leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        IconButton(onClick = onTogglePassword) {
+                            Icon(
+                                imageVector = if (state.isPasswordVisible) {
+                                    Icons.Filled.VisibilityOff
+                                } else {
+                                    Icons.Filled.Visibility
+                                },
+                                contentDescription = if (state.isPasswordVisible) {
+                                    "Hide password"
+                                } else {
+                                    "Show password"
+                                }
+                            )
+                        }
+                    },
+                    visualTransformation = if (state.isPasswordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    singleLine = true,
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                OutlinedTextField(
+                    value = state.confirmPassword,
+                    onValueChange = onConfirmPasswordChange,
+                    isError = state.confirmPassword.isNotEmpty() && !passwordsMatch,
+                    label = { Text("Confirm password") },
+                    supportingText = {
+                        if (state.confirmPassword.isNotEmpty() && !passwordsMatch) {
+                            Text("Passwords don’t match")
+                        }
+                    },
+                    leadingIcon = { Icon(Icons.Outlined.Lock, contentDescription = null) },
+                    trailingIcon = {
+                        IconButton(onClick = onToggleConfirmPassword) {
+                            Icon(
+                                imageVector = if (state.isConfirmPasswordVisible) {
+                                    Icons.Filled.VisibilityOff
+                                } else {
+                                    Icons.Filled.Visibility
+                                },
+                                contentDescription = if (state.isConfirmPasswordVisible) {
+                                    "Hide confirm password"
+                                } else {
+                                    "Show confirm password"
+                                }
+                            )
+                        }
+                    },
+                    visualTransformation = if (state.isConfirmPasswordVisible) {
+                        VisualTransformation.None
+                    } else {
+                        PasswordVisualTransformation()
+                    },
+                    singleLine = true,
+                    enabled = !state.isLoading,
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Button(
+                    onClick = onSignUpClick,
+                    enabled = !state.isLoading && passwordsMatch,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(52.dp)
+                ) {
+                    if (state.isLoading) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    } else {
+                        Text("Sign up")
+                    }
+                }
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("Already have an account? ")
+                    Text(
+                        "Login",
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.clickable(onClick = onLoginClick)
+                    )
+                }
             }
         }
     }
 }
 
-
 @AppPreview
 @Composable
-private fun PreviewSignUp() {
-    QuizzyTheme() {
-        SignUpScreen(onSignUp = { _,_,_ -> }, onLoginClick = {}, onGoogleClick = {})
+private fun SignUpScreenPreview() {
+    QuizzyTheme {
+        SignUpScreenContent(
+            modifier = Modifier.fillMaxSize(),
+            state = SignUpState(),
+            snackbarHostState = SnackbarHostState(),
+            onNameChange = {},
+            onEmailChange = {},
+            onPasswordChange = {},
+            onConfirmPasswordChange = {},
+            onTogglePassword = {},
+            onToggleConfirmPassword = {},
+            onSignUpClick = {},
+            onLoginClick = {}
+        )
     }
 }
