@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MyAppDrawer(
+fun QuizzApp(
     currentRoute: String,
     onItemSelected: (NavigationItem) -> Unit,
     modifier: Modifier = Modifier
