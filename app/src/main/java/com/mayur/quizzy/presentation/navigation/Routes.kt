@@ -18,6 +18,18 @@ sealed class Routes{
     @Serializable
     data object Profile : Routes()
 
+    @Serializable
+    data object Technology : Routes()
+
+    @Serializable
+    data object JavaQuiz : Routes()
+
+    @Serializable
+    data object CreateQuiz : Routes()
+
+    @Serializable
+    data object CreatedQuizzes : Routes()
+
 }
 
 sealed class Graph{

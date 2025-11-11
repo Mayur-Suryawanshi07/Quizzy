@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.mayur.quizzy.presentation.navigation.Routes
 
 @Composable
@@ -24,20 +25,36 @@ fun MyBottomNav(
         NavigationItem(Icons.Filled.Person, Icons.Filled.Person, "Profile", Routes.Profile),
         NavigationItem(Icons.Filled.Update, Icons.Filled.Update, "Updates", Routes.Updates)
     )
-    NavigationBar(modifier = modifier) {
-        items.forEach { item ->
-            val isSelected = currentRoute::class == item.route::class
-            NavigationBarItem(
-                selected = isSelected,
-                onClick = { onItemSelected(item.route) },
-                icon = {
-                    Icon(
-                        imageVector = if (isSelected) item.selectedItems else item.unselectedItems,
-                        contentDescription = item.name
-                    )
-                },
-                label = { Text(item.name) }
-            )
+    
+    // Only show bottom nav for main routes
+    val showBottomNav = when (currentRoute) {
+        is Routes.Home, is Routes.Profile, is Routes.Updates, is Routes.CreatedQuizzes -> true
+        else -> false
+    }
+    
+    if (showBottomNav) {
+        NavigationBar(
+            modifier = modifier,
+            tonalElevation = 0.dp
+        ) {
+            items.forEach { item ->
+                val isSelected = currentRoute::class == item.route::class
+                NavigationBarItem(
+                    selected = isSelected,
+                    onClick = { 
+                        if (!isSelected) {
+                            onItemSelected(item.route)
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = if (isSelected) item.selectedItems else item.unselectedItems,
+                            contentDescription = item.name
+                        )
+                    },
+                    label = { Text(item.name) }
+                )
+            }
         }
     }
 }

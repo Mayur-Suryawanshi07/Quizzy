@@ -1,20 +1,32 @@
 package com.mayur.quizzy.presentation.destination.main
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mayur.quizzy.presentation.navigation.Graph
 import com.mayur.quizzy.presentation.navigation.Routes
-import com.mayur.quizzy.presentation.screens.updatescreen.UpdateScreen
+import com.mayur.quizzy.presentation.screens.createquiz.CreateQuizScreen
+import com.mayur.quizzy.presentation.screens.createquiz.CreateQuizViewModel
+import com.mayur.quizzy.presentation.screens.createdquizzes.CreatedQuizzesScreen
+import com.mayur.quizzy.presentation.screens.createdquizzes.CreatedQuizzesViewModel
 import com.mayur.quizzy.presentation.screens.homescreen.HomeScreen
 import com.mayur.quizzy.presentation.screens.profile.ProfileScreen
+import com.mayur.quizzy.presentation.screens.technology.TechnologyScreen
+import com.mayur.quizzy.presentation.screens.technology.javaquiz.JavaQuizScreen
+
 
 fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
-
     navigation<Graph.Main>(startDestination = Routes.Home){
-        composable<Routes.Home> {
-            HomeScreen(navController = navController)
+        composable<Routes.Home> { backStackEntry ->
+            val createdQuizzesViewModel: CreatedQuizzesViewModel = viewModel(
+                viewModelStoreOwner = navController.getBackStackEntry(Graph.Main)
+            )
+            HomeScreen(
+                navController = navController,
+                createdQuizzesViewModel = createdQuizzesViewModel
+            )
         }
 
 
@@ -23,7 +35,36 @@ fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
         }
 
         composable<Routes.Updates> { backStackEntry ->
-            UpdateScreen(navController = navController)
+            CreatedQuizzesScreen(navController = navController)
+        }
+
+        composable<Routes.Technology> {
+            TechnologyScreen(navController = navController)
+        }
+
+        composable<Routes.JavaQuiz> {
+            JavaQuizScreen(navController = navController)
+        }
+
+        composable<Routes.CreateQuiz> { backStackEntry ->
+            val createdQuizzesViewModel: CreatedQuizzesViewModel = viewModel(
+                viewModelStoreOwner = navController.getBackStackEntry(Graph.Main)
+            )
+            CreateQuizScreen(
+                navController = navController,
+                createdQuizzesViewModel = createdQuizzesViewModel,
+                viewModel = viewModel { CreateQuizViewModel(createdQuizzesViewModel) }
+            )
+        }
+
+        composable<Routes.CreatedQuizzes> { backStackEntry ->
+            val createdQuizzesViewModel: CreatedQuizzesViewModel = viewModel(
+                viewModelStoreOwner = navController.getBackStackEntry(Graph.Main)
+            )
+            CreatedQuizzesScreen(
+                navController = navController,
+                viewModel = createdQuizzesViewModel
+            )
         }
 
     }

@@ -1,7 +1,8 @@
-package com.mayur.quizzy.presentation.screens.updatescreen
+package com.mayur.quizzy.presentation.screens.createscreen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -13,14 +14,14 @@ import com.mayur.quizzy.presentation.screens.components.MyBottomNav
 import com.mayur.quizzy.presentation.screens.components.MyTopAppBar
 
 @Composable
-fun UpdateScreen(modifier: Modifier = Modifier,navController: NavHostController) {
+fun CreateScreen(modifier: Modifier = Modifier,navController: NavHostController) {
     Scaffold(
         modifier = modifier,
         topBar = {
             MyTopAppBar(
                 title = "Updates",
                 navigationIcon = {},
-                actions = {}
+
             )
         },
         bottomBar = {
@@ -38,7 +39,7 @@ fun UpdateScreen(modifier: Modifier = Modifier,navController: NavHostController)
     ) { paddingValues ->
         Box(
             contentAlignment = Alignment.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().padding(paddingValues)
         ){
             Text(text = "Update Screen")
         }

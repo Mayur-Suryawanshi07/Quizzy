@@ -4,12 +4,14 @@ import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class SignUpViewModel(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -74,16 +76,52 @@ class SignUpViewModel(
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val user = auth.currentUser
-                    if (user != null && name.isNotEmpty()) {
-                        val profileUpdates = UserProfileChangeRequest.Builder()
-                            .setDisplayName(name)
-                            .build()
-                        user.updateProfile(profileUpdates)
-                            .addOnCompleteListener {
-                                // Ignore completion result for profile update, navigation proceeds anyway
+                    if (user != null) {
+                        // Update user profile with display name
+                        if (name.isNotEmpty()) {
+                            val profileUpdates = UserProfileChangeRequest.Builder()
+                                .setDisplayName(name)
+                                .build()
+                            user.updateProfile(profileUpdates)
+                                .addOnCompleteListener {
+                                    // Ignore completion result for profile update
+                                }
+                        }
+                        
+                        // Store user data in Realtime Database
+                        val userRef = database.reference.child("users").child(user.uid)
+                        val userData = hashMapOf(
+                            "name" to name,
+                            "email" to email,
+                            "uid" to user.uid
+                        )
+                        
+                        userRef.setValue(userData)
+                            .addOnCompleteListener { dbTask ->
+                                if (dbTask.isSuccessful) {
+                                    updateState { copy(isLoading = false, isSignUpSuccessful = true) }
+                                } else {
+                                    // Even if database write fails, sign up is successful
+                                    // User can still use the app, data can be synced later
+                                    val dbError = dbTask.exception?.localizedMessage
+                                        ?: "User created but failed to save profile data."
+                                    updateState { 
+                                        copy(
+                                            isLoading = false, 
+                                            isSignUpSuccessful = true,
+                                            infoMessage = dbError
+                                        ) 
+                                    }
+                                }
                             }
+                    } else {
+                        updateState { 
+                            copy(
+                                isLoading = false, 
+                                errorMessage = "User creation failed. Please try again."
+                            ) 
+                        }
                     }
-                    updateState { copy(isLoading = false, isSignUpSuccessful = true) }
                 } else {
                     val errorMessage = task.exception?.localizedMessage
                         ?: "Sign up failed. Please try again."
