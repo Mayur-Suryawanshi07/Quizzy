@@ -15,6 +15,9 @@ import com.mayur.quizzy.presentation.screens.homescreen.HomeScreen
 import com.mayur.quizzy.presentation.screens.profile.ProfileScreen
 import com.mayur.quizzy.presentation.screens.technology.TechnologyScreen
 import com.mayur.quizzy.presentation.screens.technology.javaquiz.JavaQuizScreen
+import com.mayur.quizzy.presentation.screens.technology.dbmsquiz.DBMSQuizScreen
+import com.mayur.quizzy.presentation.screens.technology.osquiz.OSQuizScreen
+import com.mayur.quizzy.presentation.screens.technology.cnquiz.CNQuizScreen
 
 
 fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
@@ -28,7 +31,6 @@ fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
                 createdQuizzesViewModel = createdQuizzesViewModel
             )
         }
-
 
         composable<Routes.Profile> {
             ProfileScreen(navController = navController)
@@ -46,6 +48,18 @@ fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
             JavaQuizScreen(navController = navController)
         }
 
+        composable<Routes.DBMSQuiz> {
+            DBMSQuizScreen(navController = navController)
+        }
+
+        composable<Routes.OSQuiz> {
+            OSQuizScreen(navController = navController)
+        }
+
+        composable<Routes.CNQuiz> {
+            CNQuizScreen(navController = navController)
+        }
+
         composable<Routes.CreateQuiz> { backStackEntry ->
             val createdQuizzesViewModel: CreatedQuizzesViewModel = viewModel(
                 viewModelStoreOwner = navController.getBackStackEntry(Graph.Main)
@@ -56,7 +70,6 @@ fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
                 viewModel = viewModel { CreateQuizViewModel(createdQuizzesViewModel) }
             )
         }
-
         composable<Routes.CreatedQuizzes> { backStackEntry ->
             val createdQuizzesViewModel: CreatedQuizzesViewModel = viewModel(
                 viewModelStoreOwner = navController.getBackStackEntry(Graph.Main)

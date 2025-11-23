@@ -1,6 +1,7 @@
 package com.mayur.quizzy.presentation.screens.components
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Update
@@ -22,8 +23,9 @@ fun MyBottomNav(
 ) {
     val items = listOf(
         NavigationItem(Icons.Filled.Home, Icons.Filled.Home, "Home", Routes.Home),
-        NavigationItem(Icons.Filled.Person, Icons.Filled.Person, "Profile", Routes.Profile),
-        NavigationItem(Icons.Filled.Update, Icons.Filled.Update, "Updates", Routes.Updates)
+
+        NavigationItem(Icons.Filled.Update, Icons.Filled.Create, "Create", Routes.Updates),
+        NavigationItem(Icons.Filled.Person, Icons.Filled.Person, "Profile", Routes.Profile)
     )
     
     // Only show bottom nav for main routes

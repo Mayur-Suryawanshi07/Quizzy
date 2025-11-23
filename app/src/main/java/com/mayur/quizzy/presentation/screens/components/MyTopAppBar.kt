@@ -18,13 +18,14 @@ import androidx.compose.material3.IconButton
 fun MyTopAppBar(
     title: String,
     navigationIcon: @Composable () -> Unit,
+    actions: @Composable RowScope.() -> Unit = {},
     modifier: Modifier = Modifier) {
     TopAppBar(
         title = {
             Text(text = title)
         },
         navigationIcon = navigationIcon,
-
+        actions = actions,
         modifier = modifier
     )
 

@@ -25,6 +25,15 @@ sealed class Routes{
     data object JavaQuiz : Routes()
 
     @Serializable
+    data object DBMSQuiz : Routes()
+
+    @Serializable
+    data object OSQuiz : Routes()
+
+    @Serializable
+    data object CNQuiz : Routes()
+
+    @Serializable
     data object CreateQuiz : Routes()
 
     @Serializable
