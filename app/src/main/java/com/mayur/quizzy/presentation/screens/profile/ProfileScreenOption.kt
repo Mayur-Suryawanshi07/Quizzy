@@ -80,7 +80,9 @@ fun statsItems(): List<StatItem> {
 }
 fun profileOptions(navController: NavHostController): List<ProfileOption> {
     val profileOptions = listOf(
-        ProfileOption("Edit Profile", Icons.Default.Edit) { },
+        ProfileOption("Edit Profile", Icons.Default.Edit) {
+            navController.navigate(com.mayur.quizzy.presentation.navigation.Routes.EditProfile)
+        },
         ProfileOption("Sign out", Icons.Default.Logout) {
             FirebaseAuth.getInstance().signOut()
             navController.navigate(Graph.Auth) {

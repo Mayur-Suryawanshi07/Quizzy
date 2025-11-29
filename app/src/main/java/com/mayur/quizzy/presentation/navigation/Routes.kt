@@ -39,6 +39,12 @@ sealed class Routes{
     @Serializable
     data object CreatedQuizzes : Routes()
 
+    @Serializable
+    data object ChatBot : Routes()
+
+    @Serializable
+    data object EditProfile : Routes()
+
 }
 
 sealed class Graph{

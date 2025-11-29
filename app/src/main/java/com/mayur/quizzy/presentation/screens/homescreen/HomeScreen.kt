@@ -75,7 +75,7 @@ fun HomeScreen(
         floatingActionButton = {
             MyFloatingAction(
                 onClick = {
-
+                    navController.navigate(Routes.ChatBot)
                 }
             )
         }
@@ -127,5 +127,4 @@ fun HomeScreen(
         }
     }
 }
-
 

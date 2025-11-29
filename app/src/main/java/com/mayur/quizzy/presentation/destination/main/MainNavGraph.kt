@@ -7,11 +7,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.mayur.quizzy.presentation.navigation.Graph
 import com.mayur.quizzy.presentation.navigation.Routes
+import com.mayur.quizzy.presentation.screens.chatbot.ChatBotScreen
+import com.mayur.quizzy.presentation.screens.chatbot.ChatBotViewModel
 import com.mayur.quizzy.presentation.screens.createquiz.CreateQuizScreen
 import com.mayur.quizzy.presentation.screens.createquiz.CreateQuizViewModel
 import com.mayur.quizzy.presentation.screens.createdquizzes.CreatedQuizzesScreen
 import com.mayur.quizzy.presentation.screens.createdquizzes.CreatedQuizzesViewModel
 import com.mayur.quizzy.presentation.screens.homescreen.HomeScreen
+import com.mayur.quizzy.presentation.screens.profile.EditProfileScreen
 import com.mayur.quizzy.presentation.screens.profile.ProfileScreen
 import com.mayur.quizzy.presentation.screens.technology.TechnologyScreen
 import com.mayur.quizzy.presentation.screens.technology.javaquiz.JavaQuizScreen
@@ -78,6 +81,17 @@ fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {
                 navController = navController,
                 viewModel = createdQuizzesViewModel
             )
+        }
+
+        composable<Routes.ChatBot> {
+            ChatBotScreen(
+                viewModel = viewModel(),
+                navController = navController
+            )
+        }
+
+        composable<Routes.EditProfile> {
+            EditProfileScreen(navController = navController)
         }
 
     }

@@ -32,9 +32,14 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun ProfileHeader() {
+fun ProfileHeader(
+    profileName: String = "",
+    profileDescription: String = ""
+) {
     val user = remember { FirebaseAuth.getInstance().currentUser }
-    val displayName = user?.displayName ?: user?.email ?: "Guest"
+    val displayName = profileName.ifBlank {
+        user?.displayName ?: user?.email?.substringBefore("@") ?: "Guest"
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -76,19 +81,21 @@ fun ProfileHeader() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = displayName ?: "Guest",
+                text = displayName,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
 
-            Spacer(modifier = Modifier.height(4.dp))
-
-            Text(
-                text = "Profile Name",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-            )
+            if (profileDescription.isNotBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = profileDescription,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
 
             Spacer(modifier = Modifier.height(8.dp))
 

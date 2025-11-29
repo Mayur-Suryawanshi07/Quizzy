@@ -18,15 +18,14 @@ fun MyFloatingAction(
 ) {
 
     FloatingActionButton(
-        onClick = {
-            onClick
-        },
+        onClick = onClick,
         elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation(),
-        modifier = modifier,
-
+        modifier = modifier
     ) {
-        Icon(imageVector = Icons.Default.Message, contentDescription = "AiChatbot",
-            Modifier.size(30.dp)
+        Icon(
+            imageVector = Icons.Default.Message,
+            contentDescription = "AiChatbot",
+            modifier = Modifier.size(30.dp)
         )
     }
 
