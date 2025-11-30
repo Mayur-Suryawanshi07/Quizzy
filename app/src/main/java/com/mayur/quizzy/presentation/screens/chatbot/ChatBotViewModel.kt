@@ -1,5 +1,6 @@
 package com.mayur.quizzy.presentation.screens.chatbot
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mayur.quizzy.common.Constants
@@ -64,6 +65,10 @@ class ChatBotViewModel @Inject constructor(
 
     fun sendMessage(message: String) {
         viewModelScope.launch {
+            // Log the input message
+            Log.d("ChatBotViewModel", "User sent message: $message")
+            Log.d("ChatBotViewModel", "Message length: ${message.length} characters")
+            
             _uiState.value = ChatState.Loading
             
             // Add user message to UI + conversation history
@@ -72,28 +77,44 @@ class ChatBotViewModel @Inject constructor(
             }
             conversationHistory.add(Content(parts = listOf(Part(text = message)), role = "user"))
             
+            Log.d("ChatBotViewModel", "Conversation history size: ${conversationHistory.size}")
+            Log.d("ChatBotViewModel", "Calling API with ${conversationHistory.size} messages in history")
+            
             try {
                 val response = chatBotRepository.generateContent(conversationHistory, Constants.apiKey)
+                Log.d("ChatBotViewModel", "API response received. Has error: ${response.error != null}, Candidates: ${response.candidates.size}")
+                
+                // Log full response details for debugging
+                if (response.error != null) {
+                    Log.e("ChatBotViewModel", "Response error details - Code: ${response.error.code}, Message: ${response.error.message}, Status: ${response.error.status}")
+                }
+                if (response.candidates.isEmpty()) {
+                    Log.w("ChatBotViewModel", "Response has no candidates. Full response structure might be different.")
+                }
                 
                 // Check if API returned an error
                 if (response.error != null) {
                     val errorMessage = response.error.message ?: "API Error: ${response.error.code}"
-                    // Remove the user message from history if request failed
-                    if (conversationHistory.isNotEmpty() && conversationHistory.last().role == "user") {
-                        conversationHistory.removeAt(conversationHistory.lastIndex)
+                    Log.e("ChatBotViewModel", "API Error: $errorMessage")
+                    Log.e("ChatBotViewModel", "Error code: ${response.error.code}, Status: ${response.error.status}")
+                    // Show error message to user
+                    _messages.update { current ->
+                        current + ChatMessage("Error: $errorMessage", isFromUser = false)
                     }
                     _uiState.value = ChatState.Error(errorMessage)
                     return@launch
                 }
                 
                 val responseText = response.candidates.firstOrNull()?.content?.parts?.firstOrNull()?.text
+                Log.d("ChatBotViewModel", "Response text extracted: ${responseText?.take(50)}...")
                 
                 if (responseText.isNullOrBlank()) {
-                    // Remove the user message from history if no response
-                    if (conversationHistory.isNotEmpty() && conversationHistory.last().role == "user") {
-                        conversationHistory.removeAt(conversationHistory.lastIndex)
+                    Log.w("ChatBotViewModel", "Response text is null or blank")
+                    val errorMsg = "No response from the AI. Please try again."
+                    _messages.update { current ->
+                        current + ChatMessage(errorMsg, isFromUser = false)
                     }
-                    _uiState.value = ChatState.Error("No response from the AI")
+                    _uiState.value = ChatState.Error(errorMsg)
                     return@launch
                 }
                 
@@ -102,12 +123,12 @@ class ChatBotViewModel @Inject constructor(
                 _messages.update { current ->
                     current + ChatMessage(responseText, isFromUser = false)
                 }
+                Log.d("ChatBotViewModel", "Successfully added bot response. Response length: ${responseText.length} characters")
                 _uiState.value = ChatState.Success(responseText)
             } catch (e: Exception) {
-                // Remove the user message from history if request failed
-                if (conversationHistory.isNotEmpty() && conversationHistory.last().role == "user") {
-                    conversationHistory.removeAt(conversationHistory.lastIndex)
-                }
+                Log.e("ChatBotViewModel", "Exception occurred: ${e.javaClass.simpleName}", e)
+                Log.e("ChatBotViewModel", "Exception message: ${e.message}")
+                Log.e("ChatBotViewModel", "Stack trace: ${e.stackTraceToString()}")
                 val errorMessage = when {
                     e.message?.contains("404") == true -> {
                         "API endpoint not found (404). Possible issues:\n" +
@@ -130,7 +151,11 @@ class ChatBotViewModel @Inject constructor(
                         "Rate limit exceeded (429). Too many requests.\n" +
                         "Please wait a moment and try again."
                     }
-                    else -> e.message ?: "An error occurred: ${e.javaClass.simpleName}"
+                    e.message?.contains("Cleartext") == true -> {
+                        "Network error: Cleartext HTTP traffic not permitted.\n" +
+                        "Please check your network configuration."
+                    }
+                    else -> "Error: ${e.message ?: e.javaClass.simpleName}\n\nPlease check your internet connection and try again."
                 }
                 _messages.update { current ->
                     current + ChatMessage(errorMessage, isFromUser = false)
