@@ -24,13 +24,13 @@ fun MyBottomNav(
     val items = listOf(
         NavigationItem(Icons.Filled.Home, Icons.Filled.Home, "Home", Routes.Home),
 
-        NavigationItem(Icons.Filled.Update, Icons.Filled.Create, "Create", Routes.Updates),
+
         NavigationItem(Icons.Filled.Person, Icons.Filled.Person, "Profile", Routes.Profile)
     )
     
     // Only show bottom nav for main routes
     val showBottomNav = when (currentRoute) {
-        is Routes.Home, is Routes.Profile, is Routes.Updates, is Routes.CreatedQuizzes -> true
+        is Routes.Home, is Routes.Profile, is Routes.ChatBot-> true
         else -> false
     }
     

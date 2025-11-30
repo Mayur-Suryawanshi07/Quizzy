@@ -2,6 +2,6 @@ package com.mayur.quizzy.common
 
 object Constants {
 
-    val apiKey = "AIzaSyD0xzqSmB5v_TZN2xEeNquGs9gmupplHGA"
+    val apiKey = "AIzaSyBjpv0sfn-Mx9B-yAc1MUDGajW2FzjZ0Q0"
 
 }

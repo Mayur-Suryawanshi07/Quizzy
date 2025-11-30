@@ -13,21 +13,18 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
-import com.mayur.quizzy.data.repository.RepositoryProvider
 import com.mayur.quizzy.presentation.navigation.Graph
 import com.mayur.quizzy.presentation.navigation.Routes
 import com.mayur.quizzy.presentation.screens.components.MyBottomNav
@@ -35,17 +32,11 @@ import com.mayur.quizzy.presentation.screens.components.MyTopAppBar
 import profileOptions
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier, navController: NavHostController) {
-    val context = LocalContext.current
-    val repository = remember { RepositoryProvider.getRepository(context) }
-    val viewModel: ProfileViewModel = viewModel(
-        factory = object : androidx.lifecycle.ViewModelProvider.Factory {
-            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
-                @Suppress("UNCHECKED_CAST")
-                return ProfileViewModel(repository) as T
-            }
-        }
-    )
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     
     val stats = listOf(

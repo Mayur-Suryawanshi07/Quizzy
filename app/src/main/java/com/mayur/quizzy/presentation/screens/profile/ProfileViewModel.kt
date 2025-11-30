@@ -3,15 +3,18 @@ package com.mayur.quizzy.presentation.screens.profile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
-import com.mayur.quizzy.data.repository.QuizRepository
+import com.mayur.quizzy.domain.repository.IQuizRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ProfileViewModel(
-    private val quizRepository: QuizRepository
+@HiltViewModel
+class ProfileViewModel @Inject constructor(
+    private val quizRepository: IQuizRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -58,11 +61,4 @@ class ProfileViewModel(
     }
 }
 
-data class ProfileUiState(
-    val totalAttempts: Int = 0,
-    val totalCorrectAnswers: Int = 0,
-    val totalQuestionsAttempted: Int = 0,
-    val averageScore: Double = 0.0,
-    val profileName: String = "",
-    val profileDescription: String = ""
-)
+
