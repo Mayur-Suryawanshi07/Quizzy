@@ -126,6 +126,7 @@ private fun SignUpScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
             ) {
+                
                 Text(
                     text = "Sign up",
                     style = MaterialTheme.typography.headlineMedium

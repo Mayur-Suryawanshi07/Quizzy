@@ -16,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataBaseModule {
 
-    private val MIGRATION_1_2 = object : Migration(1, 2) {
+    private class Migration1To2 : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL(
                 """
@@ -30,6 +30,8 @@ object DataBaseModule {
             )
         }
     }
+
+    private val MIGRATION_1_2 = Migration1To2()
 
     @Provides
     @Singleton

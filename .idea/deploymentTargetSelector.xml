@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="Quizz">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-11-13T18:22:37.259712200Z">
+        <DropdownSelection timestamp="2025-12-01T18:40:34.903415700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=a179ddb7" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=D:\Andriod Tools\.android\avd\Pixel_7_Pro.avd" />
             </handle>
           </Target>
         </DropdownSelection>

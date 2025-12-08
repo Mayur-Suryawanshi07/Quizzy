@@ -1,3 +1,5 @@
+package com.mayur.quizzy.presentation.screens.profile
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -27,9 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.google.firebase.auth.FirebaseAuth
-import com.mayur.quizzy.presentation.navigation.Graph
-import com.mayur.quizzy.presentation.screens.profile.StatItem
 
 @Composable
 fun ProfileOptionItem(option: ProfileOption, showDivider: Boolean) {
@@ -69,29 +68,14 @@ fun ProfileOptionItem(option: ProfileOption, showDivider: Boolean) {
     }
 }
 
-fun statsItems(): List<StatItem> {
-    val stats = listOf(
-        StatItem("Quizzes Taken", "42", Icons.Default.QuestionAnswer, Color(0xFF2196F3)),
-        StatItem("Correct Answers", "315", Icons.Default.CheckCircle, Color(0xFF4CAF50)),
-        StatItem("Total Score", "8,420", Icons.Default.EmojiEvents, Color(0xFFFFD700)),
-        StatItem("Best Streak", "7 days", Icons.Default.LocalFireDepartment, Color(0xFFFF5722))
-    )
-    return stats
-}
-fun profileOptions(navController: NavHostController): List<ProfileOption> {
-    val profileOptions = listOf(
+
+fun profileOptions(navController: NavHostController, onSignOut: () -> Unit): List<ProfileOption> {
+    return listOf(
         ProfileOption("Edit Profile", Icons.Default.Edit) {
             navController.navigate(com.mayur.quizzy.presentation.navigation.Routes.EditProfile)
         },
-        ProfileOption("Sign out", Icons.Default.Logout) {
-            FirebaseAuth.getInstance().signOut()
-            navController.navigate(Graph.Auth) {
-                popUpTo(Graph.Main) { inclusive = true }
-                launchSingleTop = true
-            }
-        }
+        ProfileOption("Sign out", Icons.Default.Logout, onSignOut)
     )
-    return profileOptions
 }
 data class ProfileOption(
     val title: String,

@@ -1,5 +1,7 @@
 package com.mayur.quizzy.presentation.destination
 
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -11,8 +13,11 @@ import com.mayur.quizzy.presentation.navigation.Graph
 @Composable
 fun AppNavigationGraph(modifier: Modifier = Modifier, navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Graph.Auth, modifier = modifier )
-    {
+    NavHost(
+        navController = navController,
+        startDestination = Graph.Auth,
+        modifier = modifier.background(MaterialTheme.colorScheme.background)
+    ) {
         homeNavigationGraph(navController = navController)
         authNavigationGraph(navController = navController)
     }

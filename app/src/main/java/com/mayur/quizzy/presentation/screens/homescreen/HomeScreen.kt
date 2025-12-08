@@ -50,8 +50,9 @@ fun HomeScreen(
                     navController.navigate(route) {
                         launchSingleTop = true
                         restoreState = true
-                        popUpTo(Routes.Home) {
+                        popUpTo(com.mayur.quizzy.presentation.navigation.Graph.Main) {
                             saveState = true
+                            inclusive = false
                         }
                     }
                 }

@@ -21,7 +21,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -212,12 +216,46 @@ fun ChatBubble(
                 .padding(horizontal = 16.dp, vertical = 12.dp)
                 .widthIn(max = 280.dp)
         ) {
+            val formattedText = remember(message) {
+                if (isFromUser) androidx.compose.ui.text.AnnotatedString(message)
+                else parseMarkdown(message)
+            }
+
             Text(
-                text = message,
+                text = formattedText,
                 style = MaterialTheme.typography.bodyMedium,
                 color = if (isFromUser) MaterialTheme.colorScheme.onPrimary
                 else MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+    }
+}
+
+fun parseMarkdown(text: String): androidx.compose.ui.text.AnnotatedString {
+    // Replace bullets and clean up headers
+    var formattedText = text.replace(Regex("(^|\\n)\\* "), "$1• ")
+    formattedText = formattedText.replace(Regex("(^|\\n)## "), "$1")
+
+    return buildAnnotatedString {
+        val parts = formattedText.split("**")
+        parts.forEachIndexed { index, part ->
+            if (index % 2 == 1) {
+                withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append(part)
+                }
+            } else {
+                // Simple italic parsing
+                val italicParts = part.split("*")
+                italicParts.forEachIndexed { i, subPart ->
+                    if (i % 2 == 1) {
+                        withStyle(SpanStyle(fontStyle = FontStyle.Italic)) {
+                            append(subPart)
+                        }
+                    } else {
+                        append(subPart)
+                    }
+                }
+            }
         }
     }
 }

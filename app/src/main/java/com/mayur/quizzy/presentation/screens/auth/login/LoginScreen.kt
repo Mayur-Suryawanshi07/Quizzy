@@ -84,7 +84,7 @@ fun LoginScreen(
         onPasswordChange = viewModel::onPasswordChanged,
         onTogglePassword = viewModel::togglePasswordVisibility,
         onLoginClick = viewModel::login,
-        onForgotPassword = viewModel::sendPasswordReset,
+        onForgotPassword = { navController.navigate(Routes.ForgetPassword) },
         onSignUpClick = { navController.navigate(Routes.SignUp) }
     )
 }
@@ -117,6 +117,10 @@ private fun LoginScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterVertically)
             ) {
+                Text(
+                    text = "Quizzy",
+                    style = MaterialTheme.typography.headlineMedium
+                )
                 Text(
                     text = "Welcome Back",
                     style = MaterialTheme.typography.headlineMedium

@@ -20,7 +20,8 @@ class ProfileViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "default_user"
+    private val auth = FirebaseAuth.getInstance()
+    private val userId = auth.currentUser?.uid ?: "default_user"
 
     init {
         loadStatistics()
@@ -59,6 +60,13 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    fun signOut(onSignedOut: () -> Unit) {
+        viewModelScope.launch {
+            // Reset statistics by clearing local database
+            quizRepository.deleteAllAttempts()
+            auth.signOut()
+            onSignedOut()
+        }
+    }
 }
-
-
