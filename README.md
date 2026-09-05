@@ -59,7 +59,7 @@ The project follows the **Clean Architecture** principles, divided into the foll
 ### Steps to Run
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/quizzy.git
+   git clone https://github.com/Mayur-Suryawanshi07/Quizzy.git
    ```
 2. **Firebase Setup**:
    - Create a project on the [Firebase Console](https://console.firebase.google.com/).
@@ -101,4 +101,4 @@ The project follows the **Clean Architecture** principles, divided into the foll
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-*Made with ❤️ by Mayur*
+*Made by Mayur*
