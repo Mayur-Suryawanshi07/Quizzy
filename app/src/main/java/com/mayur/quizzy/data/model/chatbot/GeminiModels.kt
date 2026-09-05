@@ -2,7 +2,7 @@ package com.mayur.quizzy.data.model.chatbot
 
 import kotlinx.serialization.Serializable
 
-/** Request body for Gemini's generateContent endpoint. */
+//Request body for Gemini's generateContent endpoint.
 @Serializable
 data class GenerateContentRequest(
     val contents: List<Content>
@@ -19,7 +19,7 @@ data class Part(
     val text: String
 )
 
-/** Response body returned by Gemini's generateContent endpoint. */
+//Response body returned by Gemini's generateContent endpoint.
 @Serializable
 data class GenerateContentResponse(
     val candidates: List<Candidate> = emptyList(),

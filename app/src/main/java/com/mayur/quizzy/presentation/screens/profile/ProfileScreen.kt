@@ -96,7 +96,7 @@ fun ProfileScreen(
                     navController.navigate(route) {
                         launchSingleTop = true
                         restoreState = true
-                        popUpTo(com.mayur.quizzy.presentation.navigation.Graph.Main) {
+                        popUpTo(Graph.Main) {
                             saveState = true
                             inclusive = false
                         }

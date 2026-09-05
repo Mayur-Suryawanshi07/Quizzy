@@ -28,15 +28,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun ForgetPasswordScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController? = null
+    navController: NavHostController? = null,
+    viewModel: ForgetPasswordViewModel = hiltViewModel()
 ) {
     var email by remember { mutableStateOf("") }
     var isLoading by remember { mutableStateOf(false) }
@@ -91,7 +94,7 @@ fun ForgetPasswordScreen(
                                     if (task.isSuccessful) {
                                         scope.launch {
                                             snackbarHostState.showSnackbar("Reset link sent to your email")
-                                            delay(1500) // Small delay so user sees the message
+                                            delay(1500.milliseconds) // Small delay so user sees the message
                                             navController?.popBackStack()
                                         }
                                     } else {

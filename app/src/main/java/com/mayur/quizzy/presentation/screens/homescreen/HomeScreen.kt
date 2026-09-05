@@ -1,8 +1,13 @@
 package com.mayur.quizzy.presentation.screens.homescreen
 
-import WelcomeSection
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -16,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.mayur.quizzy.presentation.navigation.Routes
 import com.mayur.quizzy.presentation.screens.component.MyBottomNav
 import com.mayur.quizzy.presentation.screens.component.MyFloatingAction
@@ -27,7 +31,7 @@ import com.mayur.quizzy.presentation.screens.technology.TechnologyQuizCard
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    viewModel: HomeScreenViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel()
 ) {
     
     val uiState by viewModel.uiState.collectAsState()
@@ -38,6 +42,7 @@ fun HomeScreen(
             MyTopAppBar(
                 title = "Quizzy",
                 navigationIcon = {},
+                actions = {},
 
             )
         },

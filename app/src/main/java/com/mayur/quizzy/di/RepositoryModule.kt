@@ -1,15 +1,15 @@
 package com.mayur.quizzy.di
 
 import com.mayur.quizzy.data.repository.AuthRepositoryImpl
+import com.mayur.quizzy.data.repository.ChatBotRepositoryImpl
 import com.mayur.quizzy.data.repository.QuizAttemptRepositoryImpl
 import com.mayur.quizzy.data.repository.TechnologyQuizRepositoryImpl
 import com.mayur.quizzy.data.repository.UserProfileRepositoryImpl
-import com.mayur.quizzy.data.repository.ChatBotRepositoryImpl
 import com.mayur.quizzy.domain.repository.AuthRepository
+import com.mayur.quizzy.domain.repository.ChatBotRepository
 import com.mayur.quizzy.domain.repository.QuizAttemptRepository
 import com.mayur.quizzy.domain.repository.TechnologyQuizRepository
 import com.mayur.quizzy.domain.repository.UserProfileRepository
-import com.mayur.quizzy.domain.repository.ChatBotRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

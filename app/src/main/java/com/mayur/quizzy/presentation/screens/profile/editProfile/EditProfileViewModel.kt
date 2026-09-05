@@ -1,4 +1,4 @@
-package com.mayur.quizzy.presentation.screens.profile.EditProfile
+package com.mayur.quizzy.presentation.screens.profile.editProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

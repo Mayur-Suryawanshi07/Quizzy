@@ -1,4 +1,4 @@
-package com.mayur.quizzy.presentation.screens.profile.EditProfile
+package com.mayur.quizzy.presentation.screens.profile.editProfile
 
 data class EditProfileUiState(
     val name: String = "",

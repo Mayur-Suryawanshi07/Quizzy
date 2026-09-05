@@ -2,6 +2,7 @@ package com.mayur.quizzy.presentation.screens.component
 
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Message
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
@@ -22,7 +23,7 @@ fun MyFloatingAction(
         modifier = modifier
     ) {
         Icon(
-            imageVector = Icons.Default.Message,
+            imageVector = Icons.AutoMirrored.Filled.Message,
             contentDescription = "AiChatbot",
             modifier = Modifier.size(30.dp)
         )

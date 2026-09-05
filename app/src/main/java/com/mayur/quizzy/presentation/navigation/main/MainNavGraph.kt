@@ -1,5 +1,6 @@
 package com.mayur.quizzy.presentation.navigation.main
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -8,14 +9,13 @@ import com.mayur.quizzy.presentation.navigation.Graph
 import com.mayur.quizzy.presentation.navigation.Routes
 import com.mayur.quizzy.presentation.screens.chatbot.ChatBotScreen
 import com.mayur.quizzy.presentation.screens.homescreen.HomeScreen
-import com.mayur.quizzy.presentation.screens.profile.EditProfile.EditProfileScreen
+import com.mayur.quizzy.presentation.screens.profile.editProfile.EditProfileScreen
 import com.mayur.quizzy.presentation.screens.profile.ProfileScreen
 import com.mayur.quizzy.presentation.screens.technology.TechnologyScreen
-import com.mayur.quizzy.presentation.screens.technology.javaquiz.JavaQuizScreen
-import com.mayur.quizzy.presentation.screens.technology.dbmsquiz.DBMSQuizScreen
-import com.mayur.quizzy.presentation.screens.technology.osquiz.OSQuizScreen
 import com.mayur.quizzy.presentation.screens.technology.cnquiz.CNQuizScreen
-import androidx.hilt.navigation.compose.hiltViewModel
+import com.mayur.quizzy.presentation.screens.technology.dbmsquiz.DBMSQuizScreen
+import com.mayur.quizzy.presentation.screens.technology.javaquiz.JavaQuizScreen
+import com.mayur.quizzy.presentation.screens.technology.osquiz.OSQuizScreen
 
 
 fun NavGraphBuilder.homeNavigationGraph(navController: NavHostController) {

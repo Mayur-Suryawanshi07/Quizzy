@@ -2,9 +2,9 @@ package com.mayur.quizzy.presentation.screens.technology.cnquiz
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.model.quiz.questions.Question
 import com.mayur.quizzy.domain.model.quiz.QuizResult
 import com.mayur.quizzy.domain.model.quiz.QuizSettings
+import com.mayur.quizzy.domain.model.quiz.questions.Question
 import com.mayur.quizzy.domain.use_cases.CompleteQuizUseCase
 import com.mayur.quizzy.domain.use_cases.GetQuizQuestionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 @HiltViewModel
 class CNQuizViewModel @Inject constructor(
@@ -73,7 +74,7 @@ class CNQuizViewModel @Inject constructor(
         timerJob?.cancel()
         timerJob = viewModelScope.launch {
             while (_uiState.value.isQuizStarted && !_uiState.value.showResult) {
-                delay(1000)
+                delay(1000.milliseconds)
                 val currentTime = _uiState.value.timeRemaining
                 if (currentTime > 0) {
                     _uiState.value = _uiState.value.copy(timeRemaining = currentTime - 1)
