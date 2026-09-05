@@ -7,7 +7,7 @@ import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.mayur.quizzy.domain.model.quiz.TechnologyQuiz
+import com.mayur.quizzy.domain.model.technology.TechnologyQuiz
 
 data class TechnologyQuizUi(
     val id: String,

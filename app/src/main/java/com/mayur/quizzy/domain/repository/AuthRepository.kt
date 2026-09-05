@@ -1,6 +1,6 @@
 package com.mayur.quizzy.domain.repository
 
-import com.mayur.quizzy.domain.model.user.AuthUser
+import com.mayur.quizzy.domain.model.auth.AuthUser
 
 interface AuthRepository {
     fun currentUser(): AuthUser?

@@ -1,6 +1,6 @@
-package com.mayur.quizzy.domain.use_cases
+package com.mayur.quizzy.domain.use_cases.technology
 
-import com.mayur.quizzy.domain.model.quiz.TechnologyQuiz
+import com.mayur.quizzy.domain.model.technology.TechnologyQuiz
 import com.mayur.quizzy.domain.repository.TechnologyQuizRepository
 import javax.inject.Inject
 
@@ -9,4 +9,3 @@ class GetTechnologyQuizzesUseCase @Inject constructor(
 ) {
     operator fun invoke(): List<TechnologyQuiz> = repository.getTechnologyQuizzes()
 }
-

@@ -3,7 +3,7 @@ package com.mayur.quizzy.presentation.screens.auth.login.forgetpass
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.repository.AuthRepository
+import com.mayur.quizzy.domain.use_cases.auth.SendPasswordResetUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +20,7 @@ data class ForgetPasswordUiState(
 
 @HiltViewModel
 class ForgetPasswordViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val sendPasswordReset: SendPasswordResetUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ForgetPasswordUiState())
@@ -45,7 +45,7 @@ class ForgetPasswordViewModel @Inject constructor(
 
         _state.value = _state.value.copy(isLoading = true, errorMessage = null, infoMessage = null)
         viewModelScope.launch {
-            authRepository.sendPasswordReset(email)
+            sendPasswordReset(email)
                 .onSuccess {
                     _state.value = _state.value.copy(
                         isLoading = false,

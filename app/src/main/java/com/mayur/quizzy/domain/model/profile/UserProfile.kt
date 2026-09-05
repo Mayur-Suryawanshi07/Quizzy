@@ -1,4 +1,4 @@
-package com.mayur.quizzy.domain.model.user
+package com.mayur.quizzy.domain.model.profile
 
 data class UserProfile(
     val userId: String = "default_user",
@@ -6,4 +6,3 @@ data class UserProfile(
     val description: String = "",
     val updatedAt: Long = System.currentTimeMillis()
 )
-

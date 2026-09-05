@@ -1,7 +1,7 @@
 package com.mayur.quizzy.domain.repository
 
 import com.mayur.quizzy.domain.model.quiz.questions.Question
-import com.mayur.quizzy.domain.model.quiz.TechnologyQuiz
+import com.mayur.quizzy.domain.model.technology.TechnologyQuiz
 
 interface TechnologyQuizRepository {
     fun getTechnologyQuizzes(): List<TechnologyQuiz>

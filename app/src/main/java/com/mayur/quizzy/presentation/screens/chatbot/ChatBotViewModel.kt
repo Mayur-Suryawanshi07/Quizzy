@@ -3,7 +3,7 @@ package com.mayur.quizzy.presentation.screens.chatbot
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mayur.quizzy.domain.model.chatbot.ChatMessage
-import com.mayur.quizzy.domain.use_cases.GenerateChatReplyUseCase
+import com.mayur.quizzy.domain.use_cases.chatbot.GenerateChatReplyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

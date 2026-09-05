@@ -2,10 +2,10 @@ package com.mayur.quizzy.presentation.screens.profile.editProfile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.model.user.UserProfile
-import com.mayur.quizzy.domain.repository.AuthRepository
-import com.mayur.quizzy.domain.use_cases.GetUserProfileUseCase
-import com.mayur.quizzy.domain.use_cases.SaveUserProfileUseCase
+import com.mayur.quizzy.domain.model.profile.UserProfile
+import com.mayur.quizzy.domain.use_cases.auth.GetCurrentUserUseCase
+import com.mayur.quizzy.domain.use_cases.profile.GetUserProfileUseCase
+import com.mayur.quizzy.domain.use_cases.profile.SaveUserProfileUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,13 +17,13 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val getUserProfile: GetUserProfileUseCase,
     private val saveUserProfile: SaveUserProfileUseCase,
-    authRepository: AuthRepository
+    getCurrentUser: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(EditProfileUiState())
     val uiState: StateFlow<EditProfileUiState> = _uiState.asStateFlow()
 
-    private val userId = authRepository.currentUser()?.id ?: "default_user"
+    private val userId = getCurrentUser()?.id ?: "default_user"
 
     init {
         loadProfile()

@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.mayur.quizzy.domain.model.quiz.QuizResult
 import com.mayur.quizzy.domain.model.quiz.QuizSettings
 import com.mayur.quizzy.domain.model.quiz.questions.Question
-import com.mayur.quizzy.domain.use_cases.CompleteQuizUseCase
-import com.mayur.quizzy.domain.use_cases.GetQuizQuestionsUseCase
+import com.mayur.quizzy.domain.use_cases.quiz.CompleteQuizUseCase
+import com.mayur.quizzy.domain.use_cases.quiz.GetQuizQuestionsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay

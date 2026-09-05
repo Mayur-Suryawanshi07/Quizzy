@@ -3,7 +3,7 @@ package com.mayur.quizzy.data.repository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
-import com.mayur.quizzy.domain.model.user.AuthUser
+import com.mayur.quizzy.domain.model.auth.AuthUser
 import com.mayur.quizzy.domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject

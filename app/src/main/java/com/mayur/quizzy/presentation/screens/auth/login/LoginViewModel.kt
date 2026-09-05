@@ -3,7 +3,9 @@ package com.mayur.quizzy.presentation.screens.auth.login
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.repository.AuthRepository
+import com.mayur.quizzy.domain.use_cases.auth.GetCurrentUserUseCase
+import com.mayur.quizzy.domain.use_cases.auth.SendPasswordResetUseCase
+import com.mayur.quizzy.domain.use_cases.auth.SignInUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,13 +15,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val getCurrentUser: GetCurrentUserUseCase,
+    private val signIn: SignInUseCase,
+    private val sendPasswordReset: SendPasswordResetUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
         LoginState(
-            email = authRepository.currentUser()?.email.orEmpty(),
-            isLoginSuccessful = authRepository.currentUser() != null
+            email = getCurrentUser()?.email.orEmpty(),
+            isLoginSuccessful = getCurrentUser() != null
         )
     )
     val state: StateFlow<LoginState> = _state.asStateFlow()
@@ -55,7 +59,7 @@ class LoginViewModel @Inject constructor(
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
         viewModelScope.launch {
-            authRepository.signIn(email, password)
+            signIn(email, password)
                 .onSuccess {
                     updateState { copy(isLoading = false, isLoginSuccessful = true) }
                 }
@@ -83,7 +87,7 @@ class LoginViewModel @Inject constructor(
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
         viewModelScope.launch {
-            authRepository.sendPasswordReset(email)
+            sendPasswordReset(email)
                 .onSuccess {
                     updateState { copy(isLoading = false, infoMessage = "Password reset email sent.") }
                 }

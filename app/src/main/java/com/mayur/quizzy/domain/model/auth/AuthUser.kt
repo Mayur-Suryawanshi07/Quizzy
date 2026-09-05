@@ -1,4 +1,4 @@
-package com.mayur.quizzy.domain.model.user
+package com.mayur.quizzy.domain.model.auth
 
 data class AuthUser(
     val id: String,

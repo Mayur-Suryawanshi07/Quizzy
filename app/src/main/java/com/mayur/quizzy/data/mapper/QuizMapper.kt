@@ -3,7 +3,7 @@ package com.mayur.quizzy.data.mapper
 import com.mayur.quizzy.data.local.entity.QuizAttemptEntity
 import com.mayur.quizzy.data.local.entity.UserProfileEntity
 import com.mayur.quizzy.domain.model.quiz.QuizAttempt
-import com.mayur.quizzy.domain.model.user.UserProfile
+import com.mayur.quizzy.domain.model.profile.UserProfile
 
 fun QuizAttemptEntity.toUserProfile(): QuizAttempt {
     return QuizAttempt(

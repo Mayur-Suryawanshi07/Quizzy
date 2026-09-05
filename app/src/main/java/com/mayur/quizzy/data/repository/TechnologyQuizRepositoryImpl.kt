@@ -4,7 +4,7 @@ import com.mayur.quizzy.data.local.datasource.CnQuestions
 import com.mayur.quizzy.data.local.datasource.DbmsQuestions
 import com.mayur.quizzy.data.local.datasource.JavaQuestions
 import com.mayur.quizzy.data.local.datasource.OsQuestions
-import com.mayur.quizzy.domain.model.quiz.TechnologyQuiz
+import com.mayur.quizzy.domain.model.technology.TechnologyQuiz
 import com.mayur.quizzy.domain.model.quiz.questions.Question
 import com.mayur.quizzy.domain.repository.TechnologyQuizRepository
 import javax.inject.Inject

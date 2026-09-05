@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.mayur.quizzy.presentation.navigation.Routes
 import com.mayur.quizzy.presentation.screens.component.MyBottomNav
@@ -31,7 +32,7 @@ import com.mayur.quizzy.presentation.screens.technology.TechnologyQuizCard
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    viewModel: HomeScreenViewModel = androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel()
+    viewModel: HomeScreenViewModel = hiltViewModel()
 ) {
     
     val uiState by viewModel.uiState.collectAsState()

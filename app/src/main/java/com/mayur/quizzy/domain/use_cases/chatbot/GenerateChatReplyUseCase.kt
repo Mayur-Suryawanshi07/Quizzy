@@ -1,4 +1,4 @@
-package com.mayur.quizzy.domain.use_cases
+package com.mayur.quizzy.domain.use_cases.chatbot
 
 import com.mayur.quizzy.domain.model.chatbot.ChatMessage
 import com.mayur.quizzy.domain.repository.ChatBotRepository

@@ -3,11 +3,13 @@ package com.mayur.quizzy.di
 import com.mayur.quizzy.data.repository.AuthRepositoryImpl
 import com.mayur.quizzy.data.repository.ChatBotRepositoryImpl
 import com.mayur.quizzy.data.repository.QuizAttemptRepositoryImpl
+import com.mayur.quizzy.data.repository.QuizRepositoryImpl
 import com.mayur.quizzy.data.repository.TechnologyQuizRepositoryImpl
 import com.mayur.quizzy.data.repository.UserProfileRepositoryImpl
 import com.mayur.quizzy.domain.repository.AuthRepository
 import com.mayur.quizzy.domain.repository.ChatBotRepository
 import com.mayur.quizzy.domain.repository.QuizAttemptRepository
+import com.mayur.quizzy.domain.repository.QuizRepository
 import com.mayur.quizzy.domain.repository.TechnologyQuizRepository
 import com.mayur.quizzy.domain.repository.UserProfileRepository
 import dagger.Binds
@@ -19,6 +21,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindQuizRepository(
+        impl: QuizRepositoryImpl
+    ): QuizRepository
 
     @Binds
     @Singleton

@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class ChatBotRepositoryImpl @Inject constructor(
     private val httpClient: HttpClient,
-    @GeminiApiKey private val apiKey: String
+    @param:GeminiApiKey private val apiKey: String,
 ) : ChatBotRepository {
 
     override suspend fun generateReply(conversation: List<ChatMessage>): Result<String> {

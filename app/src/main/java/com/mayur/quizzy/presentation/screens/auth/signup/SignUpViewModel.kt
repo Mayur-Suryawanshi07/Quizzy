@@ -3,7 +3,7 @@ package com.mayur.quizzy.presentation.screens.auth.signup
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.repository.AuthRepository
+import com.mayur.quizzy.domain.use_cases.auth.SignUpUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -74,7 +74,7 @@ class SignUpViewModel @Inject constructor(
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
         viewModelScope.launch {
-            authRepository.signUp(name, email, password)
+            signUpUseCase(name, email, password)
                 .onSuccess {
                     updateState { copy(isLoading = false, isSignUpSuccessful = true) }
                 }

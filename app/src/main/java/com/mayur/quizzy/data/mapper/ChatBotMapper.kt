@@ -7,6 +7,6 @@ import com.mayur.quizzy.domain.model.chatbot.ChatMessage
 fun ChatMessage.toApiContent(): Content {
     return Content(
         parts = listOf(Part(text = text)),
-        role = if (isFromUser) "user" else "model"
+        role = if (isFromUser) "user" else "model",
     )
 }

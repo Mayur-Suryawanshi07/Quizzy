@@ -2,10 +2,10 @@ package com.mayur.quizzy.presentation.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mayur.quizzy.domain.repository.AuthRepository
-import com.mayur.quizzy.domain.use_cases.GetQuizStatisticsUseCase
-import com.mayur.quizzy.domain.use_cases.GetUserProfileUseCase
-import com.mayur.quizzy.domain.use_cases.SignOutUseCase
+import com.mayur.quizzy.domain.use_cases.auth.GetCurrentUserUseCase
+import com.mayur.quizzy.domain.use_cases.quiz.GetQuizStatisticsUseCase
+import com.mayur.quizzy.domain.use_cases.profile.GetUserProfileUseCase
+import com.mayur.quizzy.domain.use_cases.auth.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,13 +18,13 @@ class ProfileViewModel @Inject constructor(
     private val getQuizStatistics: GetQuizStatisticsUseCase,
     private val getUserProfile: GetUserProfileUseCase,
     private val signOutUseCase: SignOutUseCase,
-    private val authRepository: AuthRepository
+    private val getCurrentUser: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private val userId = authRepository.currentUser()?.id ?: "default_user"
+    private val userId = getCurrentUser()?.id ?: "default_user"
 
     init {
         loadStatistics()
@@ -47,7 +47,7 @@ class ProfileViewModel @Inject constructor(
     private fun loadProfile() {
         viewModelScope.launch {
             getUserProfile.observe(userId).collect { profile ->
-                val currentUser = authRepository.currentUser()
+                val currentUser = getCurrentUser()
                 _uiState.value = _uiState.value.copy(
                     profileName = profile?.name?.takeIf { it.isNotBlank() }
                         ?: currentUser?.displayName

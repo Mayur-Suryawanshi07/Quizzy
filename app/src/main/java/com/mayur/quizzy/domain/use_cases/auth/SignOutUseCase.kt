@@ -1,4 +1,4 @@
-package com.mayur.quizzy.domain.use_cases
+package com.mayur.quizzy.domain.use_cases.auth
 
 import com.mayur.quizzy.domain.repository.AuthRepository
 import com.mayur.quizzy.domain.repository.QuizAttemptRepository

@@ -1,4 +1,4 @@
-package com.mayur.quizzy.domain.model.quiz
+package com.mayur.quizzy.domain.model.technology
 
 data class TechnologyQuiz(
     val id: String,

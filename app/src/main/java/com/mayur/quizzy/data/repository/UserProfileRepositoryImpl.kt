@@ -3,7 +3,7 @@ package com.mayur.quizzy.data.repository
 import com.mayur.quizzy.data.local.dao.UserProfileDao
 import com.mayur.quizzy.data.mapper.toUserProfile
 import com.mayur.quizzy.data.mapper.toEntity
-import com.mayur.quizzy.domain.model.user.UserProfile
+import com.mayur.quizzy.domain.model.profile.UserProfile
 import com.mayur.quizzy.domain.repository.UserProfileRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
