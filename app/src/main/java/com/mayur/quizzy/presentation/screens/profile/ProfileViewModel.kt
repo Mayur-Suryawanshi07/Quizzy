@@ -2,26 +2,29 @@ package com.mayur.quizzy.presentation.screens.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
-import com.mayur.quizzy.domain.repository.IQuizRepository
+import com.mayur.quizzy.domain.repository.AuthRepository
+import com.mayur.quizzy.domain.use_cases.GetQuizStatisticsUseCase
+import com.mayur.quizzy.domain.use_cases.GetUserProfileUseCase
+import com.mayur.quizzy.domain.use_cases.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val quizRepository: IQuizRepository
+    private val getQuizStatistics: GetQuizStatisticsUseCase,
+    private val getUserProfile: GetUserProfileUseCase,
+    private val signOutUseCase: SignOutUseCase,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
-    private val auth = FirebaseAuth.getInstance()
-    private val userId = auth.currentUser?.uid ?: "default_user"
+    private val userId = authRepository.currentUser()?.id ?: "default_user"
 
     init {
         loadStatistics()
@@ -30,30 +33,25 @@ class ProfileViewModel @Inject constructor(
 
     private fun loadStatistics() {
         viewModelScope.launch {
-            combine(
-                quizRepository.getTotalAttemptsCount(),
-                quizRepository.getTotalCorrectAnswers(),
-                quizRepository.getTotalQuestionsAttempted(),
-                quizRepository.getAverageScore()
-            ) { totalAttempts, totalCorrect, totalQuestions, avgScore ->
+            getQuizStatistics().collect { stats ->
                 _uiState.value = _uiState.value.copy(
-                    totalAttempts = totalAttempts,
-                    totalCorrectAnswers = totalCorrect,
-                    totalQuestionsAttempted = totalQuestions,
-                    averageScore = avgScore
+                    totalAttempts = stats.totalAttempts,
+                    totalCorrectAnswers = stats.totalCorrectAnswers,
+                    totalQuestionsAttempted = stats.totalQuestionsAttempted,
+                    averageScore = stats.averageScore
                 )
-            }.collect { }
+            }
         }
     }
 
     private fun loadProfile() {
         viewModelScope.launch {
-            quizRepository.getUserProfile(userId).collect { profile ->
-                val firebaseUser = FirebaseAuth.getInstance().currentUser
+            getUserProfile.observe(userId).collect { profile ->
+                val currentUser = authRepository.currentUser()
                 _uiState.value = _uiState.value.copy(
                     profileName = profile?.name?.takeIf { it.isNotBlank() }
-                        ?: firebaseUser?.displayName
-                        ?: firebaseUser?.email?.substringBefore("@")
+                        ?: currentUser?.displayName
+                        ?: currentUser?.email?.substringBefore("@")
                         ?: "Guest",
                     profileDescription = profile?.description ?: ""
                 )
@@ -63,9 +61,7 @@ class ProfileViewModel @Inject constructor(
 
     fun signOut(onSignedOut: () -> Unit) {
         viewModelScope.launch {
-            // Reset statistics by clearing local database
-            quizRepository.deleteAllAttempts()
-            auth.signOut()
+            signOutUseCase()
             onSignedOut()
         }
     }

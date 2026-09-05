@@ -2,16 +2,18 @@ package com.mayur.quizzy.presentation.screens.auth.signup
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.FirebaseDatabase
+import androidx.lifecycle.viewModelScope
+import com.mayur.quizzy.domain.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SignUpViewModel(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
-    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+@HiltViewModel
+class SignUpViewModel @Inject constructor(
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignUpState())
@@ -71,63 +73,20 @@ class SignUpViewModel(
         }
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    if (user != null) {
-                        // Update user profile with display name
-                        if (name.isNotEmpty()) {
-                            val profileUpdates = UserProfileChangeRequest.Builder()
-                                .setDisplayName(name)
-                                .build()
-                            user.updateProfile(profileUpdates)
-                                .addOnCompleteListener {
-                                    // Ignore completion result for profile update
-                                }
-                        }
-                        
-                        // Store user data in Realtime Database
-                        val userRef = database.reference.child("users").child(user.uid)
-                        val userData = hashMapOf(
-                            "name" to name,
-                            "email" to email,
-                            "uid" to user.uid
-                        )
-                        
-                        userRef.setValue(userData)
-                            .addOnCompleteListener { dbTask ->
-                                if (dbTask.isSuccessful) {
-                                    updateState { copy(isLoading = false, isSignUpSuccessful = true) }
-                                } else {
-                                    // Even if database write fails, sign up is successful
-                                    // User can still use the app, data can be synced later
-                                    val dbError = dbTask.exception?.localizedMessage
-                                        ?: "User created but failed to save profile data."
-                                    updateState { 
-                                        copy(
-                                            isLoading = false, 
-                                            isSignUpSuccessful = true,
-                                            infoMessage = dbError
-                                        ) 
-                                    }
-                                }
-                            }
-                    } else {
-                        updateState { 
-                            copy(
-                                isLoading = false, 
-                                errorMessage = "User creation failed. Please try again."
-                            ) 
-                        }
-                    }
-                } else {
-                    val errorMessage = task.exception?.localizedMessage
-                        ?: "Sign up failed. Please try again."
-                    updateState { copy(isLoading = false, errorMessage = errorMessage) }
+        viewModelScope.launch {
+            authRepository.signUp(name, email, password)
+                .onSuccess {
+                    updateState { copy(isLoading = false, isSignUpSuccessful = true) }
                 }
-            }
+                .onFailure { error ->
+                    updateState {
+                        copy(
+                            isLoading = false,
+                            errorMessage = error.localizedMessage ?: "Sign up failed. Please try again."
+                        )
+                    }
+                }
+        }
     }
 
     fun consumeSignUpSuccess() {

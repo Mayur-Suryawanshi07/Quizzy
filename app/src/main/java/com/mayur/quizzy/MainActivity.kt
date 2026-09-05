@@ -4,14 +4,9 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.tooling.preview.Preview
-import com.mayur.quizzy.ui.theme.QuizzyTheme
+import com.mayur.quizzy.presentation.ui.theme.QuizzyTheme
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.HiltAndroidApp
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -21,7 +16,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             QuizzyTheme {
 
-                    QuizzApp()
+                    QuizApp()
 
             }
         }

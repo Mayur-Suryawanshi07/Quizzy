@@ -1,8 +1,8 @@
 package com.mayur.quizzy.presentation.screens.homescreen
 
 import androidx.lifecycle.ViewModel
-import com.mayur.quizzy.domain.model.TechnologyQuiz
-import com.mayur.quizzy.domain.repository.ITechnologyQuizRepository
+import com.mayur.quizzy.domain.use_cases.GetTechnologyQuizzesUseCase
+import com.mayur.quizzy.presentation.screens.technology.toUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,19 +11,15 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    private val technologyQuizRepository: ITechnologyQuizRepository
+    getTechnologyQuizzes: GetTechnologyQuizzesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeScreenState())
     val uiState = _uiState.asStateFlow()
 
     init {
-        loadTechnologyQuizzes()
-    }
-
-    private fun loadTechnologyQuizzes() {
         _uiState.update { currentState ->
-            currentState.copy(technologyQuizzes = technologyQuizRepository.getTechnologyQuizzes())
+            currentState.copy(technologyQuizzes = getTechnologyQuizzes().map { it.toUi() })
         }
     }
 }

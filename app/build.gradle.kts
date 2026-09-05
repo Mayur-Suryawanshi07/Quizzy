@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,6 +22,14 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties= Properties()
+        localProperties.load(rootProject.file("local.properties").inputStream())
+        buildConfigField(
+            "String",
+            "MY_API_KEY",
+            "\"${localProperties.getProperty("MY_API_KEY")}\""
+        )
     }
 
     buildTypes {
@@ -30,6 +40,8 @@ android {
                 "proguard-rules.pro"
             )
         }
+
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -40,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -60,11 +73,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
+    implementation(libs.androidx.compose.material.icons.extended)
 
     //viewmodel
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -76,14 +88,6 @@ dependencies {
     //room
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
-
-    // Jetpack Compose core + material3
-    implementation(libs.androidx.ui)
-    implementation(libs.material3)
-    implementation(libs.androidx.ui.tooling.preview)
-
-    // Material Icons
-    implementation(libs.androidx.compose.material.icons.extended)
 
     //serialisation
     implementation(libs.kotlinx.serialization.json)

@@ -31,8 +31,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.mayur.quizzy.presentation.navigation.Graph
 import com.mayur.quizzy.presentation.navigation.Routes
-import com.mayur.quizzy.presentation.screens.components.MyBottomNav
-import com.mayur.quizzy.presentation.screens.components.MyTopAppBar
+import com.mayur.quizzy.presentation.screens.component.MyBottomNav
+import com.mayur.quizzy.presentation.screens.component.MyTopAppBar
 
 @Composable
 fun ProfileScreen(

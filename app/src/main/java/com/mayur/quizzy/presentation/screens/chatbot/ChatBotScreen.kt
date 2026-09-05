@@ -20,7 +20,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.mayur.quizzy.presentation.screens.chatbot.ChatMessage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -133,7 +131,7 @@ fun ChatBotScreen(
                 }
             }
 
-            if (chatState is ChatState.Loading) {
+            if (chatState is ChatBotState.Loading) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -159,14 +157,14 @@ fun ChatBotScreen(
                     onValueChange = { message = it },
                     placeholder = { Text("Type your message...") },
                     modifier = Modifier.weight(1f),
-                    enabled = chatState !is ChatState.Loading,
+                    enabled = chatState !is ChatBotState.Loading,
                     singleLine = false,
                     maxLines = 4,
                     shape = RoundedCornerShape(24.dp)
                 )
                 IconButton(
                     onClick = {
-                        if (message.isNotBlank() && chatState !is ChatState.Loading) {
+                        if (message.isNotBlank() && chatState !is ChatBotState.Loading) {
                             viewModel.sendMessage(message)
                             message = ""
                         }
@@ -176,7 +174,7 @@ fun ChatBotScreen(
                     Icon(
                         imageVector = Icons.Default.Send,
                         contentDescription = "Send",
-                        tint = if (message.isNotBlank() && chatState !is ChatState.Loading) {
+                        tint = if (message.isNotBlank() && chatState !is ChatBotState.Loading) {
                             MaterialTheme.colorScheme.primary
                         } else {
                             MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)

@@ -2,8 +2,6 @@ package com.mayur.quizzy.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.mayur.quizzy.data.local.QuizDatabase
 import dagger.Module
 import dagger.Provides
@@ -16,22 +14,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DataBaseModule {
 
-    private class Migration1To2 : Migration(1, 2) {
-        override fun migrate(database: SupportSQLiteDatabase) {
-            database.execSQL(
-                """
-                CREATE TABLE IF NOT EXISTS user_profile (
-                    userId TEXT NOT NULL PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    description TEXT NOT NULL,
-                    updatedAt INTEGER NOT NULL
-                )
-                """.trimIndent()
-            )
-        }
-    }
-
-    private val MIGRATION_1_2 = Migration1To2()
 
     @Provides
     @Singleton
@@ -41,14 +23,14 @@ object DataBaseModule {
             QuizDatabase::class.java,
             QuizDatabase.DATABASE_NAME
         )
-            .addMigrations(MIGRATION_1_2)
-            .fallbackToDestructiveMigrationOnDowngrade()
             .build()
     }
     
     @Provides
-    fun provideQuizAttemptDao(database: QuizDatabase) = database.quizAttemptDao()
+    fun provideQuizAttemptDao(database: QuizDatabase)
+    = database.quizAttemptDao()
     
     @Provides
-    fun provideUserProfileDao(database: QuizDatabase) = database.userProfileDao()
+    fun provideUserProfileDao(database: QuizDatabase)
+    = database.userProfileDao()
 }

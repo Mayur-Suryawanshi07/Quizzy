@@ -2,19 +2,24 @@ package com.mayur.quizzy.presentation.screens.auth.login
 
 import android.util.Patterns
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.FirebaseAuth
+import androidx.lifecycle.viewModelScope
+import com.mayur.quizzy.domain.repository.AuthRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class LoginViewModel(
-    private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
         LoginState(
-            email = auth.currentUser?.email.orEmpty(),
-            isLoginSuccessful = auth.currentUser != null
+            email = authRepository.currentUser()?.email.orEmpty(),
+            isLoginSuccessful = authRepository.currentUser() != null
         )
     )
     val state: StateFlow<LoginState> = _state.asStateFlow()
@@ -38,32 +43,31 @@ class LoginViewModel(
 
         when {
             email.isBlank() || password.isBlank() -> {
-                updateState {
-                    copy(errorMessage = "Email and password are required.")
-                }
+                updateState { copy(errorMessage = "Email and password are required.") }
                 return
             }
 
             !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-                updateState {
-                    copy(errorMessage = "Enter a valid email address.")
-                }
+                updateState { copy(errorMessage = "Enter a valid email address.") }
                 return
             }
         }
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
-
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        viewModelScope.launch {
+            authRepository.signIn(email, password)
+                .onSuccess {
                     updateState { copy(isLoading = false, isLoginSuccessful = true) }
-                } else {
-                    val errorMessage = task.exception?.localizedMessage
-                        ?: "Login failed. Please try again."
-                    updateState { copy(isLoading = false, errorMessage = errorMessage) }
                 }
-            }
+                .onFailure { error ->
+                    updateState {
+                        copy(
+                            isLoading = false,
+                            errorMessage = error.localizedMessage ?: "Login failed. Please try again."
+                        )
+                    }
+                }
+        }
     }
 
     fun sendPasswordReset() {
@@ -78,22 +82,21 @@ class LoginViewModel(
         }
 
         updateState { copy(isLoading = true, errorMessage = null, infoMessage = null) }
-
-        auth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
+        viewModelScope.launch {
+            authRepository.sendPasswordReset(email)
+                .onSuccess {
+                    updateState { copy(isLoading = false, infoMessage = "Password reset email sent.") }
+                }
+                .onFailure { error ->
                     updateState {
                         copy(
                             isLoading = false,
-                            infoMessage = "Password reset email sent."
+                            errorMessage = error.localizedMessage
+                                ?: "Unable to send reset email. Try again later."
                         )
                     }
-                } else {
-                    val errorMessage = task.exception?.localizedMessage
-                        ?: "Unable to send reset email. Try again later."
-                    updateState { copy(isLoading = false, errorMessage = errorMessage) }
                 }
-            }
+        }
     }
 
     fun consumeLoginSuccess() {

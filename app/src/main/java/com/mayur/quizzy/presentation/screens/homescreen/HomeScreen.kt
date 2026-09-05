@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,9 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mayur.quizzy.presentation.navigation.Routes
-import com.mayur.quizzy.presentation.screens.components.MyBottomNav
-import com.mayur.quizzy.presentation.screens.components.MyFloatingAction
-import com.mayur.quizzy.presentation.screens.components.MyTopAppBar
+import com.mayur.quizzy.presentation.screens.component.MyBottomNav
+import com.mayur.quizzy.presentation.screens.component.MyFloatingAction
+import com.mayur.quizzy.presentation.screens.component.MyTopAppBar
 import com.mayur.quizzy.presentation.screens.technology.TechnologyQuizCard
 
 @Composable
